@@ -25,7 +25,7 @@ from homeassistant.const import (
 from homeassistant.components.climate import ClimateEntity
 
 from .const import TUYA_HVAC_MODES, TUYA_FAN_MODES, TUYA_API_URLS
-from .api import TuyaAPI
+from .api import TuyaACAPI
 
 _LOGGER = logging.getLogger(__package__)
 
@@ -73,7 +73,7 @@ def setup_platform(
 
 class TuyaClimate(ClimateEntity):
     def __init__(self, hass, config):
-        self._api = TuyaAPI(
+        self._api = TuyaACAPI(
             hass,
             config[CONF_ACCESS_ID],
             config[CONF_ACCESS_SECRET],
