@@ -9,16 +9,13 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
-from homeassistant.components.fan.const import (
-    FanEntityFeature,
-)
+from homeassistant.components.fan import FanEntityFeature, FanEntity
 from homeassistant.const import (
     STATE_UNKNOWN, 
     STATE_UNAVAILABLE,
     CONF_NAME,
     CONF_UNIQUE_ID
 )
-from homeassistant.components.fan import FanEntity
 from homeassistant.util.percentage import ordered_list_item_to_percentage, percentage_to_ordered_list_item
 
 from .const import TUYA_API_URLS
