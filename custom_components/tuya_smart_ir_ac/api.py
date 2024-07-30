@@ -136,7 +136,7 @@ class TuyaRemoteAPI:
             if data.get("success"):
                 _LOGGER.info(pformat("GET_KEYS " + str(data.get("result"))))
                 commands = {}
-                for k in data.get('key_list'):
+                for k in data.get('result').get('key_list'):
                     commands[k['key_name']] = k.copy()
                 self._commands = commands.copy()
         except Exception as e:
@@ -163,7 +163,7 @@ class TuyaRemoteAPI:
         url = f"/v2.0/infrareds/{self.infrared_id}/remotes/{self.remote_id}/raw/command"
         _LOGGER.info(url)
         try:
-            cmd = self.commands[cmd]
+            cmd = self._commands[cmd]
             _LOGGER.info(pformat("SEND_COMMAND_CODE_THEN_VAL " + cmd ))
             data = await self.hass.async_add_executor_job(
                 self.openapi.post,

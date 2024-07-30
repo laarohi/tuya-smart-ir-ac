@@ -79,13 +79,16 @@ class TuyaFan(FanEntity):
 
     @property
     def supported_features(self):
-        return FanEntityFeature.TURN_OFF | FanEntityFeature.SET_SPEED
+        return FanEntityFeature.SET_SPEED
 
     @property
     def percentage(self):
         """Return the current speed percentage."""
-        current_speed = float(self._api._speed) if self._api._speed else None
-        return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, current_speed)
+        current_speed = self._api._speed if self._api._speed else None
+        if current_speed:
+            return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, current_speed)
+        else:
+            return 0
 
     @property
     def speed_count(self):
@@ -95,7 +98,7 @@ class TuyaFan(FanEntity):
     async def async_turn_off(self):
         """Turn the fan off."""
         _LOGGER.info("TURN OFF")
-        await self._api.async_turnoff()
+        await self._api.async_turn_off()
 
     async def async_update(self):
         await self._api.async_update()
