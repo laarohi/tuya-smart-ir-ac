@@ -82,7 +82,7 @@ class TuyaFan(FanEntity):
 
     @property
     def supported_features(self):
-        return FanEntityFeature.SET_SPEED | FanEntityFeature.TURN_ON
+        return FanEntityFeature.SET_SPEED 
 
     @property
     def percentage(self):
