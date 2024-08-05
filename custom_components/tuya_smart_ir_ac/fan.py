@@ -39,7 +39,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_ACCESS_SECRET): cv.string,
         vol.Required(CONF_INFRARED_ID): cv.string,
         vol.Required(CONF_REMOTE_ID): cv.string,
-        vol.Required(CONF_CATEGORY_ID): cv.integer,
+        vol.Required(CONF_CATEGORY_ID): vol.Coerce(int),
         vol.Required(CONF_NAME): cv.string,
         vol.Optional(CONF_UNIQUE_ID): cv.string,
         vol.Optional(CONF_TUYA_COUNTRY, default=DEFAULT_TUYA_COUNTRY): vol.In(TUYA_API_URLS.keys())
