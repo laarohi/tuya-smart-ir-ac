@@ -27,6 +27,7 @@ CONF_ACCESS_ID = "access_id"
 CONF_ACCESS_SECRET = "access_secret"
 CONF_INFRARED_ID = "infrared_id"
 CONF_REMOTE_ID = "remote_id"
+CONF_CATEGORY_ID = "category_id"
 CONF_TUYA_COUNTRY = "country"
 
 DEFAULT_PRECISION = 1.0
@@ -38,6 +39,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_ACCESS_SECRET): cv.string,
         vol.Required(CONF_INFRARED_ID): cv.string,
         vol.Required(CONF_REMOTE_ID): cv.string,
+        vol.Required(CONF_CATEGORY_ID): cv.integer,
         vol.Required(CONF_NAME): cv.string,
         vol.Optional(CONF_UNIQUE_ID): cv.string,
         vol.Optional(CONF_TUYA_COUNTRY, default=DEFAULT_TUYA_COUNTRY): vol.In(TUYA_API_URLS.keys())
@@ -64,6 +66,7 @@ class TuyaFan(FanEntity):
             config[CONF_ACCESS_SECRET],
             config[CONF_REMOTE_ID],
             config[CONF_INFRARED_ID],
+            config[CONF_CATEGORY_ID],
             TUYA_API_URLS.get(config[CONF_TUYA_COUNTRY])
         )
         self._name = config.get(CONF_NAME)
