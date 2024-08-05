@@ -157,10 +157,8 @@ class TuyaRemoteAPI:
         self._power = False
         await self.send_command("Fan Off")
 
-    async def async_turn_off(self):
-        self._power = True
-        self._speed = 2
-        await self.send_command("Medium")
+    async def async_turn_on(self):
+        await self.set_fan_speed("Medium")
 
     async def async_toggle_light(self):
         await self.send_command("Light On/Off")
