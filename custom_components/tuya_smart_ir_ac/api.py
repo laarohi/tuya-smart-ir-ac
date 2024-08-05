@@ -114,11 +114,13 @@ class TuyaRemoteAPI:
         access_secret,
         remote_id,
         infrared_id,
+        category_id,
         api_url
     ):
         self.hass = hass
         self.remote_id = remote_id
         self.infrared_id = infrared_id
+        self.category_id = category_id
 
         openapi = TuyaOpenAPI(api_url, access_id, access_secret)
         openapi.connect()
@@ -128,11 +130,13 @@ class TuyaRemoteAPI:
         self._speed = None
         self._commands = {}
 
-    async def async_init(self):
+        self.get_commands()
+
+    def get_commands(self):
         url = f'/v2.0/infrareds/{self.infrared_id}/remotes/{self.remote_id}/keys'
         _LOGGER.info(url)
         try:
-            data = await self.hass.async_add_executor_job(self.openapi.get, url)
+            data = self.openapi.get(url)
             if data.get("success"):
                 _LOGGER.info(pformat("GET_KEYS " + str(data.get("result"))))
                 commands = {}
@@ -141,6 +145,8 @@ class TuyaRemoteAPI:
                 self._commands = commands.copy()
         except Exception as e:
             _LOGGER.error(f"Error sending command: {e}")
+
+    async def async_init(self):
         await self.update()
 
     async def async_update(self):
@@ -151,6 +157,11 @@ class TuyaRemoteAPI:
         self._power = False
         await self.send_command("Fan Off")
 
+    async def async_turn_off(self):
+        self._power = True
+        self._speed = 2
+        await self.send_command("Medium")
+
     async def async_toggle_light(self):
         await self.send_command("Light On/Off")
 
@@ -159,12 +170,28 @@ class TuyaRemoteAPI:
         self._power = True
         await self.send_command(speed)
 
+    def test_command(self, cmd):
+        url = f"/v2.0/infrareds/{self.infrared_id}/remotes/{self.remote_id}/raw/command"
+        _LOGGER.info(url)
+        cmd = self._commands[cmd]
+        _LOGGER.info(pformat("SEND_COMMAND_CODE_THEN_VAL " + str(cmd) ))
+        data = self.openapi.post(
+            url,
+            {
+                "category_id": self.category_id,
+                "key_id": cmd['key_id'],
+                "key": cmd['key'],
+            },
+        )
+        _LOGGER.info(pformat("SEND_COMMAND_END " + str(data)))
+        return data
+
     async def send_command(self, cmd):
         url = f"/v2.0/infrareds/{self.infrared_id}/remotes/{self.remote_id}/raw/command"
         _LOGGER.info(url)
         try:
             cmd = self._commands[cmd]
-            _LOGGER.info(pformat("SEND_COMMAND_CODE_THEN_VAL " + cmd ))
+            _LOGGER.info(pformat("SEND_COMMAND_CODE_THEN_VAL " + str(cmd) ))
             data = await self.hass.async_add_executor_job(
                 self.openapi.post,
                 url,
