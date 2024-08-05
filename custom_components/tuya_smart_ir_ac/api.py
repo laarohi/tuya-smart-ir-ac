@@ -155,6 +155,7 @@ class TuyaRemoteAPI:
 
     async def async_turn_off(self):
         self._power = False
+        self._speed = None
         await self.send_command("Fan Off")
 
     async def async_turn_on(self):
